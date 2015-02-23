@@ -48,7 +48,9 @@ int compareIdentifiers(const char* nullTerminated, const char* notNullTerminated
 }
 
 bool MetaFileReader::isValidModule(WTF::StringImpl *identifier) {
-    const char* moduleIdentifier = identifier->utf8().data();
+    WTF::CString str = identifier->utf8();
+    const char* moduleIdentifier = str.data();
+    size_t length = identifier->length();
 
     MetaArrayCount arrayLength = this->file.getModuleTableSlotsCount();
 //    const void* arrayBegin = this->moveWithCounts(1)->asPointer();
@@ -61,7 +63,7 @@ bool MetaFileReader::isValidModule(WTF::StringImpl *identifier) {
         mid = (right + left) / 2;
         MetaFileOffset offset = this->file.goToModuleTable(mid);
         const char* key = getMetadata()->moveInHeap(offset)->readString();
-        int comparisonResult = strcasecmp(key, moduleIdentifier);
+        int comparisonResult = strncasecmp(key, moduleIdentifier, length);
         if (comparisonResult < 0) {
             left = mid + 1;
         } else if (comparisonResult > 0) {
