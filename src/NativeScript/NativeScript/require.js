@@ -1,4 +1,4 @@
-(function (applicationPath, createModuleFunction) {
+(function (applicationPath, createModuleFunction, isValidNativeModule, createNativeModule) {
     'use strict';
 
     function ModuleError() {
@@ -96,20 +96,32 @@
             throw new Error('Module identifiers may not have file-name extensions like ".js"');
         }
 
-        var moduleMetadata = __findModule(moduleIdentifier, previousPath);
+        var key = "";
+        var module = {};
 
-        var key = moduleMetadata.bundlePath;
-        if (modulesCache.has(key)) {
-            return modulesCache.get(key);
+        if (isValidNativeModule(moduleIdentifier))
+        {
+            key = moduleIdentifier;
+            if (modulesCache.has(key)) {
+                return modulesCache.get(key);
+            }
+
+            module = createNativeModule(moduleIdentifier);
+        } else {
+            var moduleMetadata = __findModule(moduleIdentifier, previousPath);
+
+            key = moduleMetadata.bundlePath;
+            if (modulesCache.has(key)) {
+                return modulesCache.get(key);
+            }
+
+            module.exports = {};
+            module.id = moduleMetadata.bundlePath;
+
+            __executeModule(moduleMetadata, module);
         }
 
-        var module = {};
-        module.exports = {};
-        module.id = moduleMetadata.bundlePath;
-
         modulesCache.set(key, module);
-
-        __executeModule(moduleMetadata, module);
 
         return module;
     }

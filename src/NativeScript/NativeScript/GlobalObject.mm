@@ -7,6 +7,7 @@
 //
 
 #include "GlobalObject.h"
+#include "ModuleObject.h"
 #include <string>
 #include <JavaScriptCore/FunctionPrototype.h>
 #include <JavaScriptCore/FunctionConstructor.h>
@@ -90,6 +91,7 @@ void GlobalObject::finishCreation(VM& vm) {
     this->_ffiFunctionCallbackStructure.set(vm, this, FFIFunctionCallback::createStructure(vm, this, jsNull()));
     this->_recordFieldGetterStructure.set(vm, this, RecordProtoFieldGetter::createStructure(vm, this, this->functionPrototype()));
     this->_recordFieldSetterStructure.set(vm, this, RecordProtoFieldSetter::createStructure(vm, this, this->functionPrototype()));
+    this->_moduleObjectStructure.set(vm, this, ModuleObject::createStructure(vm, this, this->objectPrototype()));
 
     this->_typeFactory.set(vm, this, TypeFactory::create(vm, this, TypeFactory::createStructure(vm, this, jsNull())));
 
@@ -146,6 +148,7 @@ void GlobalObject::visitChildren(JSCell* cell, SlotVisitor& visitor) {
     visitor.append(&globalObject->_weakRefConstructorStructure);
     visitor.append(&globalObject->_weakRefPrototypeStructure);
     visitor.append(&globalObject->_weakRefInstanceStructure);
+    visitor.append(&globalObject->_moduleObjectStructure);
 }
 
 void GlobalObject::destroy(JSCell* cell) {

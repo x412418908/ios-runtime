@@ -125,6 +125,8 @@ public:
 
     const Meta* findMeta(const char* identifier, size_t length, unsigned hash);
 
+    bool isValidModule(WTF::StringImpl* identifier);
+
     int findInSortedMetaArray(const char* identifier, int length);
 
     MetaArrayCount globalTableSlotsCount() const {

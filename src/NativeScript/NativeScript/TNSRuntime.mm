@@ -20,6 +20,8 @@
 #include "inlineFunctions.h"
 #import "TNSRuntime.h"
 #import "TNSRuntimePrivate.h"
+#include "ModuleObject.h"
+#include "MetaFileReader.h"
 
 using namespace JSC;
 using namespace NativeScript;
@@ -72,15 +74,24 @@ static JSC_HOST_CALL EncodedJSValue createModuleFunction(ExecState* execState) {
     requireArgs.append(moduleBody);
 
     JSFunction* moduleFunction = jsCast<JSFunction*>(constructFunction(execState, execState->lexicalGlobalObject(), requireArgs, moduleName->toIdentifier(execState), moduleUrl, WTF::TextPosition()));
-    if (execState->hadException()) {
-        return JSValue::encode(jsUndefined());
-    }
     SourceProvider* sourceProvider = moduleFunction->sourceCode()->provider();
 
     TNSRuntime* runtime = static_cast<TNSRuntime*>(WTF::wtfThreadData().m_apiData);
     runtime->_sourceProviders.push_back(sourceProvider);
 
     return JSValue::encode(moduleFunction);
+}
+
+static EncodedJSValue JSC_HOST_CALL isValidNativeModuleFunction(ExecState *execState) {
+    WTF::String moduleIdentifier = execState->argument(0).toWTFString(execState);
+    bool result = Metadata::getMetadata()->isValidModule(moduleIdentifier.impl());
+    return JSValue::encode(jsBoolean(result));
+}
+
+static EncodedJSValue JSC_HOST_CALL createNativeModuleFunction(ExecState *execState) {
+    GlobalObject* globalObject = jsCast<GlobalObject*>(execState->lexicalGlobalObject());
+    ModuleObject* module = ModuleObject::create(execState->vm(), globalObject->moduleObjectStructure(), execState->argument(0).toWTFString(execState));
+    return JSValue::encode(module);
 }
 
 - (void)executeModule:(NSString*)entryPointModuleIdentifier error:(JSValueRef*)error {
@@ -104,6 +115,8 @@ static JSC_HOST_CALL EncodedJSValue createModuleFunction(ExecState* execState) {
     MarkedArgumentBuffer requireFactoryArgs;
     requireFactoryArgs.append(jsString(self->_vm.get(), WTF::String(self->_applicationPath)));
     requireFactoryArgs.append(JSFunction::create(*self->_vm, self->_globalObject.get(), 2, WTF::emptyString(), createModuleFunction));
+    requireFactoryArgs.append(JSFunction::create(*self->_vm, self->_globalObject.get(), 1, WTF::emptyString(), isValidNativeModuleFunction));
+    requireFactoryArgs.append(JSFunction::create(*self->_vm, self->_globalObject.get(), 1, WTF::emptyString(), createNativeModuleFunction));
     CallData requireFactoryCallData;
     CallType requireFactoryCallType = requireFactory.asCell()->methodTable()->getCallData(requireFactory.asCell(), requireFactoryCallData);
     JSValue require = call(self->_globalObject->globalExec(), requireFactory.asCell(), requireFactoryCallType, requireFactoryCallData, jsNull(), requireFactoryArgs, &exception);

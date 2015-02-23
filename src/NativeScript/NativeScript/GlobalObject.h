@@ -23,6 +23,7 @@ class ObjCProtocolWrapper;
 class RecordConstructor;
 class Interop;
 class TypeFactory;
+class ModuleObject;
 
 class GlobalObject : public JSC::JSGlobalObject {
 public:
@@ -84,6 +85,10 @@ public:
         return this->_recordFieldSetterStructure.get();
     }
 
+    JSC::Structure* moduleObjectStructure() const {
+        return this->_moduleObjectStructure.get();
+    }
+
     Interop* interop() const {
         return this->_interop.get();
     }
@@ -140,6 +145,8 @@ private:
 
     JSC::WriteBarrier<JSC::Structure> _recordFieldGetterStructure;
     JSC::WriteBarrier<JSC::Structure> _recordFieldSetterStructure;
+
+    JSC::WriteBarrier<JSC::Structure> _moduleObjectStructure;
 
     JSC::WriteBarrier<TypeFactory> _typeFactory;
 

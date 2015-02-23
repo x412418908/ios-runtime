@@ -60,6 +60,7 @@
 		BD6CDECC69A2B093E776F80C /* PointerPrototype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BD6CD4096B36D3C30D83A48E /* PointerPrototype.cpp */; };
 		BD6CDF1BCF770FAC2F9E9580 /* ObjCPrimitiveTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = BD6CD6C9A6CE4AD69E33A428 /* ObjCPrimitiveTypes.mm */; };
 		C474AC8419E5846600D8D067 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B2A789197818E200616E60 /* UIKit.framework */; };
+		C4C6FFDB1A9B7205007005E8 /* ModuleObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4C6FFDA1A9B7205007005E8 /* ModuleObject.mm */; };
 		C90090A919C8587A008C1794 /* MetadataTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C90090A819C8587A008C1794 /* MetadataTests.mm */; };
 		C91A787A19C82254001C2731 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C91A787919C82254001C2731 /* libicucore.dylib */; };
 		C91A787C19C82263001C2731 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C91A787B19C82263001C2731 /* libz.dylib */; };
@@ -210,6 +211,8 @@
 		BD6CDFB736D1CA66D243B67D /* ReferenceConstructor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReferenceConstructor.h; sourceTree = "<group>"; };
 		BD6CDFC7E2F646E00C59A5B1 /* ObjCProtocolWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCProtocolWrapper.h; sourceTree = "<group>"; };
 		C48120741990B9AB000814FE /* inlineFunctions.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = inlineFunctions.js; sourceTree = "<group>"; };
+		C4C6FFDA1A9B7205007005E8 /* ModuleObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModuleObject.mm; sourceTree = "<group>"; };
+		C4C6FFE01A9B724A007005E8 /* ModuleObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModuleObject.h; sourceTree = "<group>"; };
 		C90090A819C8587A008C1794 /* MetadataTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MetadataTests.mm; sourceTree = "<group>"; };
 		C91A787919C82254001C2731 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		C91A787B19C82263001C2731 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -323,6 +326,8 @@
 				85B2A75519756AE200616E60 /* TypeFactory.mm */,
 				85B2A71A19752CEA00616E60 /* GlobalObject.h */,
 				85B2A71919752CEA00616E60 /* GlobalObject.mm */,
+				C4C6FFE01A9B724A007005E8 /* ModuleObject.h */,
+				C4C6FFDA1A9B7205007005E8 /* ModuleObject.mm */,
 				85B2A6F2197529BE00616E60 /* NativeScript.h */,
 				85ABE186198B9AD100EAC351 /* TNSRuntime.h */,
 				85ABE194198BCCAB00EAC351 /* TNSRuntimePrivate.h */,
@@ -691,6 +696,7 @@
 				85F3B5E219DD6D7000A29DAC /* JSWeakRefConstructor.cpp in Sources */,
 				85B2A6FB19752A9400616E60 /* FFICall.cpp in Sources */,
 				85ABE18E198BA63900EAC351 /* TNSRuntimeInspector.mm in Sources */,
+				C4C6FFDB1A9B7205007005E8 /* ModuleObject.mm in Sources */,
 				85B2A71B19752CEA00616E60 /* GlobalObject.mm in Sources */,
 				85B2A79019781C6500616E60 /* ObjCPrototype.mm in Sources */,
 				85BD8CD219811B1500C96EB8 /* ObjCExtend.mm in Sources */,

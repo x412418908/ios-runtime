@@ -47,6 +47,36 @@ int compareIdentifiers(const char* nullTerminated, const char* notNullTerminated
     return (result == 0) ? strlen(nullTerminated) - length : result;
 }
 
+bool MetaFileReader::isValidModule(WTF::StringImpl *identifier) {
+    const char* moduleIdentifier = identifier->utf8().data();
+
+    MetaArrayCount arrayLength = this->file.getModuleTableSlotsCount();
+//    const void* arrayBegin = this->moveWithCounts(1)->asPointer();
+
+    // Binary search
+    int left = 0;
+    int right = arrayLength - 1;
+    int mid = 0;
+    while (left <= right) {
+        mid = (right + left) / 2;
+        MetaFileOffset offset = this->file.goToModuleTable(mid);
+        const char* key = getMetadata()->moveInHeap(offset)->readString();
+        int comparisonResult = strcasecmp(key, moduleIdentifier);
+        if (comparisonResult < 0) {
+            left = mid + 1;
+        } else if (comparisonResult > 0) {
+            right = mid - 1;
+        } else {
+//            this->moveToPointer(savedCursor);
+            return mid >= 0;
+        }
+//        this->moveToPointer(arrayBegin);
+    }
+
+//    this->moveToPointer(savedCursor);
+    return -(left + 1) >= 0;
+}
+
 const Meta* MetaFileReader::findMeta(const char* identifierString, size_t length, unsigned hash) {
     const void* savedCursor = this->asPointer();
 
