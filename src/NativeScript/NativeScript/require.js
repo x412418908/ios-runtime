@@ -106,7 +106,7 @@
                 return modulesCache.get(key);
             }
 
-            module = createNativeModule(moduleIdentifier);
+            module = { id: moduleIdentifier, exports: createNativeModule(moduleIdentifier) };
         } else {
             var moduleMetadata = __findModule(moduleIdentifier, previousPath);
 
