@@ -1,6 +1,11 @@
 (function (applicationPath, createModuleFunction, isValidNativeModule, createNativeModule) {
     'use strict';
 
+    var modulesCache = new Map();
+    var foundation = createNativeModule('Foundation');
+    modulesCache.set('Foundation', { exports: foundation, id: 'Foundation' });
+    var NSString = foundation.NSString;
+
     function ModuleError() {
         var tmp = Error.apply(this, arguments);
         this.message = tmp.message;
@@ -13,7 +18,7 @@
     var CORE_MODULES_ROOT = NSString.stringWithString("tns_modules");
     var USER_MODULES_ROOT = NSString.stringWithString("app");
 
-    var fileManager = NSFileManager.defaultManager();
+    var fileManager = foundation.NSFileManager.defaultManager();
     var nsstr = NSString.stringWithString.bind(NSString);
 
     applicationPath = nsstr(applicationPath).stringByStandardizingPath;
@@ -43,7 +48,7 @@
             var mainFileName = "index.js";
 
             var packageJsonPath = nsstr(absolutePath).stringByAppendingPathComponent("package.json");
-            var packageJson = NSString.stringWithContentsOfFileEncodingError(packageJsonPath, NSUTF8StringEncoding, null);
+            var packageJson = NSString.stringWithContentsOfFileEncodingError(packageJsonPath, foundation.NSUTF8StringEncoding, null);
             if (packageJson) {
                 //console.debug("PACKAGE_FOUND: " + packageJsonPath);
 
@@ -82,7 +87,7 @@
         module.require = function require(moduleIdentifier) {
             return __loadModule(moduleIdentifier, modulePath).exports;
         };
-        var moduleSource = NSString.stringWithContentsOfFileEncodingError(moduleMetadata.path, NSUTF8StringEncoding, null);
+        var moduleSource = NSString.stringWithContentsOfFileEncodingError(moduleMetadata.path, foundation.NSUTF8StringEncoding, null);
         var moduleFunction = createModuleFunction(moduleSource, moduleMetadata.bundlePath, moduleMetadata.name);
         var fileName = moduleMetadata.path;
         var dirName = nsstr(moduleMetadata.path).stringByDeletingLastPathComponent.toString();
@@ -90,7 +95,6 @@
         moduleFunction(module.require, module, module.exports, dirName, fileName);
     }
 
-    var modulesCache = new Map();
     function __loadModule(moduleIdentifier, previousPath) {
         if (/\.js$/.test(moduleIdentifier)) {
             throw new Error('Module identifiers may not have file-name extensions like ".js"');

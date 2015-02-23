@@ -161,90 +161,9 @@ bool GlobalObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
     }
 
     GlobalObject* globalObject = jsCast<GlobalObject*>(object);
-    VM& vm = execState->vm();
 
     if (propertyName == globalObject->_interopIdentifier) {
         propertySlot.setValue(object, DontEnum | ReadOnly | DontDelete, globalObject->interop());
-        return true;
-    }
-
-    StringImpl* symbolName = propertyName.publicName();
-    const Meta* symbolMeta = getMetadata()->findMeta(symbolName);
-    if (!symbolMeta)
-        return false;
-
-    JSValue symbolWrapper;
-
-    switch (symbolMeta->type()) {
-    case Interface: {
-        Class klass = objc_getClass(symbolMeta->name());
-        if (!klass) {
-            SymbolLoader::instance().ensureFramework(symbolMeta->framework());
-            klass = objc_getClass(symbolMeta->name());
-        }
-
-        if (klass) {
-            symbolWrapper = globalObject->_typeFactory.get()->getObjCNativeConstructor(globalObject, symbolMeta->jsName());
-            globalObject->_objCConstructors.insert(std::pair<Class, Strong<ObjCConstructorBase>>(klass, Strong<ObjCConstructorBase>(vm, jsCast<ObjCConstructorBase*>(symbolWrapper))));
-        }
-        break;
-    }
-    case ProtocolType: {
-        Protocol* aProtocol = objc_getProtocol(symbolMeta->name());
-        if (!aProtocol) {
-            SymbolLoader::instance().ensureFramework(symbolMeta->framework());
-            aProtocol = objc_getProtocol(symbolMeta->name());
-        }
-
-        symbolWrapper = ObjCProtocolWrapper::create(vm, ObjCProtocolWrapper::createStructure(vm, globalObject, globalObject->objectPrototype()), static_cast<const ProtocolMeta*>(symbolMeta), aProtocol);
-        if (aProtocol) {
-            auto pair = std::pair<const Protocol*, Strong<ObjCProtocolWrapper>>(aProtocol, Strong<ObjCProtocolWrapper>(vm, jsCast<ObjCProtocolWrapper*>(symbolWrapper)));
-            globalObject->_objCProtocolWrappers.insert(pair);
-        }
-        break;
-    }
-    case Union: {
-        //        symbolWrapper = globalObject->typeFactory()->createOrGetUnionConstructor(globalObject, symbolName);
-        break;
-    }
-    case Struct: {
-        symbolWrapper = globalObject->typeFactory()->getStructConstructor(globalObject, symbolName);
-        break;
-    }
-    case MetaType::Function: {
-        void* functionSymbol = SymbolLoader::instance().loadFunctionSymbol(symbolMeta->framework(), symbolMeta->name());
-        if (functionSymbol) {
-            const FunctionMeta* functionMeta = static_cast<const FunctionMeta*>(symbolMeta);
-            Metadata::MetaFileOffset cursor = functionMeta->encodingOffset();
-            JSCell* returnType = globalObject->typeFactory()->parseType(globalObject, cursor);
-            const WTF::Vector<JSCell*> parametersTypes = globalObject->typeFactory()->parseTypes(globalObject, cursor, functionMeta->encodingCount() - 1);
-            symbolWrapper = FFIFunctionCall::create(vm, globalObject->ffiFunctionCallStructure(), functionSymbol, functionMeta->jsName(), returnType, parametersTypes, functionMeta->ownsReturnedCocoaObject());
-        }
-        break;
-    }
-    case Var: {
-        const VarMeta* varMeta = static_cast<const VarMeta*>(symbolMeta);
-        void* varSymbol = SymbolLoader::instance().loadDataSymbol(varMeta->framework(), varMeta->name());
-        if (varSymbol) {
-            MetaFileOffset cursor = varMeta->encodingOffset();
-            JSCell* symbolType = globalObject->typeFactory()->parseType(globalObject, cursor);
-            symbolWrapper = getFFITypeMethodTable(symbolType).read(execState, varSymbol, symbolType);
-        }
-        break;
-    }
-    case JsCode: {
-        WTF::String source = WTF::String(static_cast<const JsCodeMeta*>(symbolMeta)->jsCode());
-        symbolWrapper = evaluate(execState, makeSource(source));
-        break;
-    }
-    default: {
-        break;
-    }
-    }
-
-    if (symbolWrapper) {
-        object->putDirectWithoutTransition(vm, propertyName, symbolWrapper);
-        propertySlot.setValue(object, None, symbolWrapper);
         return true;
     }
 
