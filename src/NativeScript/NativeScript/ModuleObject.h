@@ -32,10 +32,6 @@ public:
 
     static void getOwnPropertyNames(JSC::JSObject* object, JSC::ExecState* execState, JSC::PropertyNameArray& propertyNames, JSC::EnumerationMode enumerationMode);
 
-    ObjCConstructorBase* constructorFor(Class klass, Class fallback = Nil);
-
-    ObjCProtocolWrapper* protocolWrapperFor(Protocol* aProtocol);
-
 private:
     ModuleObject(JSC::VM& vm, JSC::Structure* structure)
         : Base(vm, structure)
