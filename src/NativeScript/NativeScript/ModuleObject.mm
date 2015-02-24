@@ -49,10 +49,9 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
 //        return true;
 //    }
 
-    const char* moduleName = moduleObject->_name.utf8().data();
     StringImpl* symbolName = propertyName.publicName();
     const Meta* symbolMeta = getMetadata()->findMeta(symbolName);
-    if (!symbolMeta ||  (strcmp(moduleName, symbolMeta->moduleName()) != 0))
+    if (!symbolMeta || !WTF::equalIgnoringCase(moduleObject->_name, symbolMeta->moduleName()))
         return false;
 
     JSValue symbolWrapper;
@@ -134,9 +133,12 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
 }
 
 void ModuleObject::getOwnPropertyNames(JSObject* object, ExecState* execState, PropertyNameArray& propertyNames, EnumerationMode enumerationMode) {
+    ModuleObject* moduleObject = jsCast<ModuleObject*>(object);
+
     MetaFileReader* metadata = getMetadata();
     for (MetaIterator it = metadata->begin(); it != metadata->end(); ++it) {
-        propertyNames.add(Identifier(execState, (*it)->jsName()));
+        if (WTF::equalIgnoringCase(moduleObject->_name, (*it)->moduleName()))
+            propertyNames.add(Identifier(execState, (*it)->jsName()));
     }
 
     Base::getOwnPropertyNames(object, execState, propertyNames, enumerationMode);
