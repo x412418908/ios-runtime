@@ -52,7 +52,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
     const char* moduleName = moduleObject->_name.utf8().data();
     StringImpl* symbolName = propertyName.publicName();
     const Meta* symbolMeta = getMetadata()->findMeta(symbolName);
-    if (!symbolMeta ||  (strcmp(moduleName, symbolMeta->framework().data()) != 0))
+    if (!symbolMeta ||  (strcmp(moduleName, symbolMeta->moduleName()) != 0))
         return false;
 
     JSValue symbolWrapper;
@@ -61,7 +61,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
         case Interface: {
             Class klass = objc_getClass(symbolMeta->name());
             if (!klass) {
-                SymbolLoader::instance().ensureFramework(symbolMeta->framework());
+                SymbolLoader::instance().ensureFramework(symbolMeta->moduleName());
                 klass = objc_getClass(symbolMeta->name());
             }
 
@@ -74,7 +74,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
         case ProtocolType: {
             Protocol* aProtocol = objc_getProtocol(symbolMeta->name());
             if (!aProtocol) {
-                SymbolLoader::instance().ensureFramework(symbolMeta->framework());
+                SymbolLoader::instance().ensureFramework(symbolMeta->moduleName());
                 aProtocol = objc_getProtocol(symbolMeta->name());
             }
 
@@ -94,7 +94,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
             break;
         }
         case MetaType::Function: {
-            void* functionSymbol = SymbolLoader::instance().loadFunctionSymbol(symbolMeta->framework(), symbolMeta->name());
+            void* functionSymbol = SymbolLoader::instance().loadFunctionSymbol(symbolMeta->moduleName(), symbolMeta->name());
             if (functionSymbol) {
                 const FunctionMeta* functionMeta = static_cast<const FunctionMeta*>(symbolMeta);
                 Metadata::MetaFileOffset cursor = functionMeta->encodingOffset();
@@ -106,7 +106,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
         }
         case Var: {
             const VarMeta* varMeta = static_cast<const VarMeta*>(symbolMeta);
-            void* varSymbol = SymbolLoader::instance().loadDataSymbol(varMeta->framework(), varMeta->name());
+            void* varSymbol = SymbolLoader::instance().loadDataSymbol(varMeta->moduleName(), varMeta->name());
             if (varSymbol) {
                 MetaFileOffset cursor = varMeta->encodingOffset();
                 JSCell* symbolType = globalObject->typeFactory()->parseType(globalObject, cursor);
