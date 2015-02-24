@@ -1,3 +1,5 @@
+var corefoundation = require('CoreFoundation');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -13,10 +15,10 @@ describe(module.id, function () {
         bagvalsRef[0] = a;
         bagvalsRef[1] = b;
 
-        var bag = CFBagCreate(kCFAllocatorDefault, bagvals, 2, null);
-        expect(CFBagGetCount(bag)).toBe(2);
-        expect(CFBagGetCountOfValue(bag, a)).toBe(1);
-        expect(CFBagContainsValue(bag, a)).toBe(true);
-        CFRelease(bag);
+        var bag = corefoundation.CFBagCreate(corefoundation.kCFAllocatorDefault, bagvals, 2, null);
+        expect(corefoundation.CFBagGetCount(bag)).toBe(2);
+        expect(corefoundation.CFBagGetCountOfValue(bag, a)).toBe(1);
+        expect(corefoundation.CFBagContainsValue(bag, a)).toBe(true);
+        corefoundation.CFRelease(bag);
     });
 });

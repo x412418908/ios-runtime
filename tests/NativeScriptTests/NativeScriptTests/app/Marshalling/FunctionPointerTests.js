@@ -1,10 +1,12 @@
+var tnsfunctionpointers = require('TNSFunctionPointers');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it("SimpleFunctionPointerRead", function () {
-        var func = functionWhichReturnsSimpleFunctionPointer();
+        var func = tnsfunctionpointers.functionWhichReturnsSimpleFunctionPointer();
         expect(func).toBeDefined();
         expect(func(1 << 15)).toBe(1 << 30);
     });
@@ -16,7 +18,7 @@ describe(module.id, function () {
 
         expect(f(2)).toBe(4);
 
-        functionWithSimpleFunctionPointer(f);
+        tnsfunctionpointers.functionWithSimpleFunctionPointer(f);
         expect(TNSGetOutput()).toBe('4');
     });
 
@@ -48,11 +50,11 @@ describe(module.id, function () {
         });
 
         TNSClearOutput();
-        functionWithComplexFunctionPointer(f);
+        tnsfunctionpointers.functionWithComplexFunctionPointer(f);
         expect(TNSGetOutput()).toBe('5 6 7 8');
 
         TNSClearOutput();
-        functionWithComplexFunctionPointer(f);
+        tnsfunctionpointers.functionWithComplexFunctionPointer(f);
         expect(TNSGetOutput()).toBe('5 6 7 8');
     });
 });

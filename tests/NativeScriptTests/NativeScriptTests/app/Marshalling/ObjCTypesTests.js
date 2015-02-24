@@ -1,17 +1,23 @@
+var objectivec = require('ObjectiveC');
+var foundation = require('Foundation');
+var tnsobjctypes = require('TNSObjCTypes');
+
+var TNSObjCTypes = tnsobjctypes.TNSObjCTypes;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it("FunctionWithCFTypeRefArgument", function () {
-        TNSFunctionWithCFTypeRefArgument(NSString.stringWithString('test'));
+        tnsobjctypes.TNSFunctionWithCFTypeRefArgument(foundation.NSString.stringWithString('test'));
 
         var actual = TNSGetOutput();
         expect(actual).toBe("test");
     });
 
     it("FunctionWithSimpleCFTypeRefReturn", function () {
-        expect(NSString(TNSFunctionWithSimpleCFTypeRefReturn()).toString()).toBe('test');
+        expect(foundation.NSString(tnsobjctypes.TNSFunctionWithSimpleCFTypeRefReturn()).toString()).toBe('test');
     });
 
     it("OutParameter", function () {
@@ -111,7 +117,7 @@ describe(module.id, function () {
     });
 
     it("MethodWithNSArray", function () {
-        var array = [1, 2, 'a', NSObject];
+        var array = [1, 2, 'a', objectivec.NSObject];
         var result = TNSObjCTypes.alloc().init().methodWithNSArray(array);
         expect(TNSGetOutput()).toBe(
             '1' +
@@ -159,6 +165,6 @@ describe(module.id, function () {
     });
 
     it("NSNull", function () {
-        expect(NSNull.null() instanceof NSObject).toBe(true);
+        expect(foundation.NSNull.null() instanceof objectivec.NSObject).toBe(true);
     });
 });

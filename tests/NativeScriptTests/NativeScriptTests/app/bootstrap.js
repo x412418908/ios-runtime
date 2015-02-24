@@ -2,16 +2,23 @@
 console.log('TNSRuntime is running...');
 
 require('./Infrastructure/timers');
+var common = require('TNSTestCommon');
+var foundation = require('Foundation');
+var uikit = require('UIKit');
+
+global.TNSGetOutput = common.TNSGetOutput;
+global.TNSClearOutput = common.TNSClearOutput;
+global.TNSLog = common.TNSLog;
 
 global.UNUSED = function (param) {
 };
 
 global.SYSTEM_VERSION_LESS_THAN = function (version) {
-    var systemVersion = NSString.stringWithString(UIDevice.currentDevice().systemVersion);
-    return systemVersion.compareOptions(version, NSStringCompareOptions.NSNumericSearch) === NSComparisonResult.NSOrderedAscending;
+    var systemVersion = foundation.NSString.stringWithString(uikit.UIDevice.currentDevice().systemVersion);
+    return systemVersion.compareOptions(version, foundation.NSStringCompareOptions.NSNumericSearch) === foundation.NSComparisonResult.NSOrderedAscending;
 };
 
-var args = NSProcessInfo.processInfo().arguments;
+var args = foundation.NSProcessInfo.processInfo().arguments;
 var logjunit = args.containsObject("-logjunit");
 
 // Provides an output channel for jasmine JUnit test result xml.
@@ -25,7 +32,7 @@ global.__JUnitSaveResults = function (text) {
     }
 };
 
-global.__approot = NSBundle.mainBundle().bundlePath;
+global.__approot = foundation.NSBundle.mainBundle().bundlePath;
 
 require('./Infrastructure/Jasmine/jasmine-2.0.1/boot');
 
@@ -61,4 +68,4 @@ require('./shared');
 
 execute();
 
-UIApplicationMain(0, null, null, null);
+uikit.UIApplicationMain(0, null, null, null);

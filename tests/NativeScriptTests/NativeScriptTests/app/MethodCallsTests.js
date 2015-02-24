@@ -1,3 +1,8 @@
+var tnsmethodcalls = require('TNSMethodCalls');
+
+var TNSBaseInterface = tnsmethodcalls.TNSBaseInterface;
+var TNSDerivedInterface = tnsmethodcalls.TNSDerivedInterface;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();

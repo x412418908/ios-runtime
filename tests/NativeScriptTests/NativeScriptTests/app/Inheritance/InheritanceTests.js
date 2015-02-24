@@ -1,3 +1,15 @@
+var objectivec = require('ObjectiveC');
+var foundation = require('Foundation');
+var tnsmethodcalls = require('TNSMethodCalls');
+var tnsinheritance = require("TNSInheritance");
+
+var NSObject = objectivec.NSObject;
+var TNSBaseInterface = tnsmethodcalls.TNSBaseInterface;
+var TNSDerivedInterface = tnsmethodcalls.TNSDerivedInterface;
+var TNSTestNativeCallbacks = require('TNSTestNativeCallbacks').TNSTestNativeCallbacks;
+var TNSIDerivedInterface = tnsinheritance.TNSIDerivedInterface;
+var TNSIConstructorVirtualCalls = tnsinheritance.TNSIConstructorVirtualCalls;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -1664,7 +1676,7 @@ describe(module.id, function () {
             name: 'JSObject'
         });
         var object = new JSObject();
-        expect(object.isMemberOfClass(NSClassFromString('JSObject'))).toBe(true);
+        expect(object.isMemberOfClass(foundation.NSClassFromString('JSObject'))).toBe(true);
     });
 
     it('ExposeVoidSelector', function () {
@@ -1703,7 +1715,7 @@ describe(module.id, function () {
             }
         }, {
             exposedMethods: {
-                'variadicSelector:x:': {returns: NSObject, params: [NSString, interop.types.int32]}
+                'variadicSelector:x:': {returns: NSObject, params: [foundation.NSString, interop.types.int32]}
             }
         });
         var object = new JSObject();

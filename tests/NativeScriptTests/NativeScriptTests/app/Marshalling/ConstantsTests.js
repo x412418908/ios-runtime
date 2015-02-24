@@ -1,15 +1,18 @@
+var foundation = require('Foundation');
+var tnsapi = require('TNSApi');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it("SimpleNSStringConstant", function () {
-        expect(NSRangeException).toBe('NSRangeException');
+        expect(foundation.NSRangeException).toBe('NSRangeException');
     });
 
     it("ConstantsEqulality", function () {
-        expect(TNSConstant).toBe(TNSConstant);
-        expect(TNSConstant.description).toBe(TNSConstant.description);
+        expect(tnsapi.TNSConstant).toBe(tnsapi.TNSConstant);
+        expect(tnsapi.TNSConstant.description).toBe(tnsapi.TNSConstant.description);
     });
 
 // TODO

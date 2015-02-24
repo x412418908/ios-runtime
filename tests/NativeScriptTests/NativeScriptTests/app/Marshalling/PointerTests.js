@@ -1,3 +1,12 @@
+var objectivec = require('ObjectiveC');
+var tnsmethodcalls = require('TNSMethodCalls');
+var tnsrecords = require('TNSRecords');
+var tnsobjctypes = require('TNSObjCTypes');
+var tnsprimitivepointers = require('TNSPrimitivePointers');
+var tnsfunctionpointers = require('TNSFunctionPointers');
+
+var NSObject = objectivec.NSObject;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -37,18 +46,18 @@ describe(module.id, function () {
         expect(interop.handleof(NSObject.extend({})) instanceof interop.Pointer).toBe(true);
         expect(interop.handleof(NSObject.extend({}).alloc().init()) instanceof interop.Pointer).toBe(true);
 
-        expect(interop.handleof(TNSBaseProtocol1) instanceof interop.Pointer).toBe(true);
-        expect(interop.handleof(functionWithInt) instanceof interop.Pointer).toBe(true);
-        expect(interop.handleof(TNSObjCTypes.alloc().init().methodWithBlockScope(4)) instanceof interop.Pointer).toBe(true);
+        expect(interop.handleof(tnsmethodcalls.TNSBaseProtocol1) instanceof interop.Pointer).toBe(true);
+        expect(interop.handleof(tnsprimitivepointers.functionWithInt) instanceof interop.Pointer).toBe(true);
+        expect(interop.handleof(tnsobjctypes.TNSObjCTypes.alloc().init().methodWithBlockScope(4)) instanceof interop.Pointer).toBe(true);
 
-        expect(interop.handleof(new TNSSimpleStruct()) instanceof interop.Pointer).toBe(true);
+        expect(interop.handleof(new tnsrecords.TNSSimpleStruct()) instanceof interop.Pointer).toBe(true);
         expect(interop.handleof(interop.alloc(4)) instanceof interop.Pointer).toBe(true);
 
         var reference = new interop.Reference();
         expect(function () {
             interop.handleof(reference);
         }).toThrowError();
-        functionWithIntPtr(reference);
+        tnsprimitivepointers.functionWithIntPtr(reference);
         expect(interop.handleof(reference) instanceof interop.Pointer).toBe(true);
 
         var functionReference = new interop.FunctionReference(function () {
@@ -56,7 +65,7 @@ describe(module.id, function () {
         expect(function () {
             interop.handleof(functionReference);
         }).toThrowError();
-        functionWithSimpleFunctionPointer(functionReference);
+        tnsfunctionpointers.functionWithSimpleFunctionPointer(functionReference);
         expect(interop.handleof(functionReference) instanceof interop.Pointer).toBe(true);
 
         expect(interop.handleof(null)).toBe(null);
@@ -69,9 +78,9 @@ describe(module.id, function () {
         expect(interop.sizeof(NSObject.extend({}))).toBeGreaterThan(0);
         expect(interop.sizeof(NSObject.extend({}).alloc().init())).toBeGreaterThan(0);
 
-        expect(interop.sizeof(TNSBaseProtocol1)).toBeGreaterThan(0);
-        expect(interop.sizeof(functionWithInt)).toBeGreaterThan(0);
-        expect(interop.sizeof(TNSObjCTypes.alloc().init().methodWithBlockScope(4))).toBeGreaterThan(0);
+        expect(interop.sizeof(tnsmethodcalls.TNSBaseProtocol1)).toBeGreaterThan(0);
+        expect(interop.sizeof(tnsprimitivepointers.functionWithInt)).toBeGreaterThan(0);
+        expect(interop.sizeof(tnsobjctypes.TNSObjCTypes.alloc().init().methodWithBlockScope(4))).toBeGreaterThan(0);
 
         expect(interop.sizeof(interop.Reference)).toBeGreaterThan(0);
         expect(interop.sizeof(new interop.Reference())).toBeGreaterThan(0);

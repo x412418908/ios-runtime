@@ -1,3 +1,5 @@
+var tnsfunctionpointers = require('TNSFunctionPointers');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -122,7 +124,7 @@ describe(module.id, function () {
     });
 
     it("FunctionReferenceTypeReadingFromPointer", function () {
-        var funcPtr = functionReturningFunctionPtrAsVoidPtr();
+        var funcPtr = tnsfunctionpointers.functionReturningFunctionPtrAsVoidPtr();
         var funcType = new interop.types.FunctionReferenceType(interop.types.int64, interop.types.int64);
         var func = funcType(pointerTo(interop.Pointer, funcPtr));
         var x = func(90);

@@ -1,10 +1,17 @@
+var foundation = require('Foundation');
+var objectivec = require('ObjectiveC');
+var uikit = require('UIKit');
+var tnsapi = require('TNSApi');
+var tnstestnativecallbacks = require('TNSTestNativeCallbacks');
+var tnsprimitives = require('TNSPrimitives');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it("NativeArrayWithArray", function () {
-        var object = NSArray.arrayWithArray([0, 1, '2']);
+        var object = foundation.NSArray.arrayWithArray([0, 1, '2']);
         expect(object.objectAtIndex(0)).toBe(0);
         expect(object.objectAtIndex(1)).toBe(1);
         expect(object.objectAtIndex(2)).toBe('2');
@@ -15,7 +22,7 @@ describe(module.id, function () {
     it("MethodCalledInDealloc", function () {
         expect(function () {
             (function () {
-                var JSApi = TNSApi.extend({});
+                var JSApi = tnsapi.TNSApi.extend({});
                 new JSApi();
             }());
 
@@ -25,21 +32,21 @@ describe(module.id, function () {
     });
 
     it("CustomGetterAndSetter", function () {
-        var object = new TNSApi();
+        var object = new tnsapi.TNSApi();
         expect(object.property).toBe(0);
         object.property = 3;
         expect(object.property).toBe(3);
 
-        TNSTestNativeCallbacks.apiCustomGetterAndSetter(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.apiCustomGetterAndSetter(object);
     });
 
     it("OverrideWithCustomGetterAndSetter", function () {
-        var JSApi = TNSApi.extend({
+        var JSApi = tnsapi.TNSApi.extend({
             get property() {
-                return -Object.getOwnPropertyDescriptor(TNSApi.prototype, 'property').get.call(this);
+                return -Object.getOwnPropertyDescriptor(tnsapi.TNSApi.prototype, 'property').get.call(this);
             },
             set property(x) {
-                Object.getOwnPropertyDescriptor(TNSApi.prototype, 'property').set.call(this, x * 2);
+                Object.getOwnPropertyDescriptor(tnsapi.TNSApi.prototype, 'property').set.call(this, x * 2);
             },
         });
         var object = new JSApi();
@@ -47,7 +54,7 @@ describe(module.id, function () {
         object.property = 3;
         expect(object.property).toBe(-6);
 
-        TNSTestNativeCallbacks.apiOverrideWithCustomGetterAndSetter(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.apiOverrideWithCustomGetterAndSetter(object);
     });
 
     // TODO
@@ -79,8 +86,8 @@ describe(module.id, function () {
     it("instanceOfNativeClass", function () {
         var array = new NSMutableArray();
         expect(array instanceof NSMutableArray).toBe(true);
-        expect(array instanceof NSArray).toBe(true);
-        expect(array instanceof NSObject).toBe(true);
+        expect(array instanceof foundation.NSArray).toBe(true);
+        expect(array instanceof objectivec.NSObject).toBe(true);
     });
 
     it("instanceOfDerivedClass", function () {
@@ -88,27 +95,27 @@ describe(module.id, function () {
         var object = JSObject.alloc().init();
         expect(object instanceof JSObject).toBe(true);
         expect(object instanceof TNSDerivedInterface).toBe(true);
-        expect(object instanceof NSObject).toBe(true);
+        expect(object instanceof objectivec.NSObject).toBe(true);
     });
 
     it("instanceOfUITabBarController", function () {
-        var object = UITabBarController.alloc().init();
-        expect(object instanceof UITabBarController).toBe(true);
-        expect(object instanceof UIViewController).toBe(true);
-        expect(object instanceof UIResponder).toBe(true);
-        expect(object instanceof NSObject).toBe(true);
+        var object = uikit.UITabBarController.alloc().init();
+        expect(object instanceof uikit.UITabBarController).toBe(true);
+        expect(object instanceof uikit.UIViewController).toBe(true);
+        expect(object instanceof uikit.UIResponder).toBe(true);
+        expect(object instanceof objectivec.NSObject).toBe(true);
     });
 
     it("Appearance", function () {
-        expect(UILabel.appearance().description.indexOf('<Customizable class: UILabel>')).not.toBe(-1);
+        expect(uikit.UILabel.appearance().description.indexOf('<Customizable class: UILabel>')).not.toBe(-1);
 
-        UILabel.appearance().textColor = UIColor.redColor();
-        expect(UILabel.appearance().textColor).toBe(UIColor.redColor());
-        expect(UILabel.appearance().constructor).toBe(UILabel);
+        uikit.UILabel.appearance().textColor = uikit.UIColor.redColor();
+        expect(uikit.UILabel.appearance().textColor).toBe(uikit.UIColor.redColor());
+        expect(uikit.UILabel.appearance().constructor).toBe(uikit.UILabel);
     });
 
     it("ReadonlyPropertyInProtocolAndOverrideWithSetterInInterface", function () {
-        var object = new UIView();
+        var object = new uikit.UIView();
         object.bounds = {
             origin: {
                 x: 10,
@@ -120,11 +127,11 @@ describe(module.id, function () {
             }
         };
 
-        TNSTestNativeCallbacks.apiReadonlyPropertyInProtocolAndOverrideWithSetterInInterface(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.apiReadonlyPropertyInProtocolAndOverrideWithSetterInInterface(object);
     });
 
     it("DescriptionOverride", function () {
-        var object = NSObject.extend({
+        var object = objectivec.NSObject.extend({
             get description() {
                 return 'js description';
             }
@@ -133,17 +140,17 @@ describe(module.id, function () {
         expect(object.description).toBe('js description');
         expect(object.toString()).toBe('js description');
 
-        TNSTestNativeCallbacks.apiDescriptionOverride(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.apiDescriptionOverride(object);
     });
 
     it("ProtocolClassConflict", function () {
-        expect(NSProtocolFromString("NSObject")).toBe(NSObjectProtocol);
+        expect(foundation.NSProtocolFromString("NSObject")).toBe(objectivec.NSObjectProtocol);
     });
 
     it("NSMutableArrayMethods", function () {
-        var JSMutableArray = NSMutableArray.extend({
+        var JSMutableArray = foundation.NSMutableArray.extend({
             init: function () {
-                var self = NSMutableArray.prototype.init.apply(this, arguments);
+                var self = foundation.NSMutableArray.prototype.init.apply(this, arguments);
                 self._array = [];
                 return self;
             },
@@ -183,7 +190,7 @@ describe(module.id, function () {
 
         (function () {
             var array = new JSMutableArray();
-            TNSTestNativeCallbacks.apiNSMutableArrayMethods(array);
+            tnstestnativecallbacks.TNSTestNativeCallbacks.apiNSMutableArrayMethods(array);
         }());
         __collect();
 
@@ -191,14 +198,14 @@ describe(module.id, function () {
     });
 
     it("SpecialCaseProperty_When_InstancesRespondToSelector:_IsFalse", function () {
-        var field = new UITextField();
+        var field = new uikit.UITextField();
         expect(field.secureTextEntry).toBe(false);
         field.secureTextEntry = true;
         expect(field.secureTextEntry).toBe(true);
     });
 
     it("TypedefPointerClass", function () {
-        expect(TNSApi.alloc().init().strokeColor).toBeNull();
+        expect(tnsapi.TNSApi.alloc().init().strokeColor).toBeNull();
     });
 
     it("GlobalObjectProperties", function () {
@@ -217,7 +224,7 @@ describe(module.id, function () {
 
             var symbol = global[x];
 
-            if (NSObject.isPrototypeOf(symbol) || symbol === NSObject) {
+            if (objectivec.NSObject.isPrototypeOf(symbol) || symbol === objectivec.NSObject) {
                 var klass = symbol;
                 expect(klass).toBeDefined();
 
@@ -255,31 +262,31 @@ describe(module.id, function () {
     });
 
     it("NSObjectSuperClass", function () {
-        expect(NSObject.superclass()).toBeNull();
-        expect(NSObject.alloc().init().superclass).toBeNull();
+        expect(objectivec.NSObject.superclass()).toBeNull();
+        expect(objectivec.NSObject.alloc().init().superclass).toBeNull();
     });
 
     it("NSObjectAsId", function () {
-        expect(NSObject.respondsToSelector('description')).toBe(true);
+        expect(objectivec.NSObject.respondsToSelector('description')).toBe(true);
     });
 
     it("FunctionLength", function () {
-        expect(functionWithInt.length).toBe(1);
-        expect(NSObject.isSubclassOfClass.length).toBe(1);
+        expect(tnsprimitives.functionWithInt.length).toBe(1);
+        expect(objectivec.NSObject.isSubclassOfClass.length).toBe(1);
     });
 
     it("ArgumentsCount", function () {
         expect(function () {
-            NSObject.alloc().init(3);
+            objectivec.NSObject.alloc().init(3);
         }).toThrowError();
     });
 
     it("Swizzle", function () {
-        var object = TNSSwizzleKlass.alloc().init();
+        var object = tnsapi.TNSSwizzleKlass.alloc().init();
 
         (function () {
-            var nativeProperty = Object.getOwnPropertyDescriptor(TNSSwizzleKlass.prototype, 'aProperty');
-            Object.defineProperty(TNSSwizzleKlass.prototype, 'aProperty', {
+            var nativeProperty = Object.getOwnPropertyDescriptor(tnsapi.TNSSwizzleKlass.prototype, 'aProperty');
+            Object.defineProperty(tnsapi.TNSSwizzleKlass.prototype, 'aProperty', {
                 get: function () {
                     return 2 * nativeProperty.get.call(this);
                 },
@@ -288,29 +295,29 @@ describe(module.id, function () {
                 }
             });
 
-            var nativeStaticMethod = TNSSwizzleKlass.staticMethod;
-            TNSSwizzleKlass.staticMethod = function (x) {
+            var nativeStaticMethod = tnsapi.TNSSwizzleKlass.staticMethod;
+            tnsapi.TNSSwizzleKlass.staticMethod = function (x) {
                 return 2 * nativeStaticMethod.apply(this, arguments);
             };
 
-            var nativeInstanceMethod = TNSSwizzleKlass.prototype.instanceMethod;
-            TNSSwizzleKlass.prototype.instanceMethod = function (x) {
+            var nativeInstanceMethod = tnsapi.TNSSwizzleKlass.prototype.instanceMethod;
+            tnsapi.TNSSwizzleKlass.prototype.instanceMethod = function (x) {
                 return 2 * nativeInstanceMethod.apply(this, arguments);
             };
 
             object.aProperty = 4;
             expect(object.aProperty).toBe(16);
-            expect(TNSSwizzleKlass.staticMethod(4)).toBe(8);
+            expect(tnsapi.TNSSwizzleKlass.staticMethod(4)).toBe(8);
             expect(object.instanceMethod(4)).toBe(8);
 
-            TNSTestNativeCallbacks.apiSwizzle(TNSSwizzleKlass.alloc().init());
+            tnstestnativecallbacks.TNSTestNativeCallbacks.apiSwizzle(tnsapi.TNSSwizzleKlass.alloc().init());
             expect(TNSGetOutput()).toBe('1266');
             TNSClearOutput();
         }());
 
         (function () {
-            var swizzledProperty = Object.getOwnPropertyDescriptor(TNSSwizzleKlass.prototype, 'aProperty');
-            Object.defineProperty(TNSSwizzleKlass.prototype, 'aProperty', {
+            var swizzledProperty = Object.getOwnPropertyDescriptor(tnsapi.TNSSwizzleKlass.prototype, 'aProperty');
+            Object.defineProperty(tnsapi.TNSSwizzleKlass.prototype, 'aProperty', {
                 get: function () {
                     return 3 * swizzledProperty.get.call(this);
                 },
@@ -319,22 +326,22 @@ describe(module.id, function () {
                 }
             });
 
-            var swizzledStaticMethod = TNSSwizzleKlass.staticMethod;
-            TNSSwizzleKlass.staticMethod = function (x) {
+            var swizzledStaticMethod = tnsapi.TNSSwizzleKlass.staticMethod;
+            tnsapi.TNSSwizzleKlass.staticMethod = function (x) {
                 return 3 * swizzledStaticMethod.apply(this, arguments);
             };
 
-            var swizzledInstanceMethod = TNSSwizzleKlass.prototype.instanceMethod;
-            TNSSwizzleKlass.prototype.instanceMethod = function (x) {
+            var swizzledInstanceMethod = tnsapi.TNSSwizzleKlass.prototype.instanceMethod;
+            tnsapi.TNSSwizzleKlass.prototype.instanceMethod = function (x) {
                 return 3 * swizzledInstanceMethod.apply(this, arguments);
             };
 
             object.aProperty = 4;
             expect(object.aProperty).toBe(144);
-            expect(TNSSwizzleKlass.staticMethod(4)).toBe(24);
+            expect(tnsapi.TNSSwizzleKlass.staticMethod(4)).toBe(24);
             expect(object.instanceMethod(4)).toBe(24);
 
-            TNSTestNativeCallbacks.apiSwizzle(TNSSwizzleKlass.alloc().init());
+            tnstestnativecallbacks.TNSTestNativeCallbacks.apiSwizzle(tnsapi.TNSSwizzleKlass.alloc().init());
             expect(TNSGetOutput()).toBe('1081818');
             TNSClearOutput();
         }());

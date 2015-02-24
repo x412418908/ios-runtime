@@ -1,14 +1,16 @@
 // https://github.com/telerik/xPlatCore/blob/master/JS/BCL/timer/timer.ios.ts
+var foundation = require('Foundation');
+var objectivec = require('ObjectiveC');
 
 var timeoutCallbacks = {};
 
-var TimerCallbackTarget = NSObject.extend({
+var TimerCallbackTarget = objectivec.NSObject.extend({
     "tick:": function (timer) {
         this.callback.call(null);
     }
 }, {
     exposedMethods: {
-        "tick:": { returns: interop.types.void, params: [ NSTimer ] }
+        "tick:": { returns: interop.types.void, params: [ foundation.NSTimer ] }
     }
 });
 
@@ -17,7 +19,7 @@ function createTimerAndGetId(callback, milliseconds, shouldRepeat) {
 
     var target = new TimerCallbackTarget();
     target.callback = callback;
-    var timer = NSTimer.scheduledTimerWithTimeIntervalTargetSelectorUserInfoRepeats(milliseconds / 1000, target, "tick:", null, shouldRepeat);
+    var timer = foundation.NSTimer.scheduledTimerWithTimeIntervalTargetSelectorUserInfoRepeats(milliseconds / 1000, target, "tick:", null, shouldRepeat);
 
     if (!timeoutCallbacks[id]) {
         timeoutCallbacks[id] = timer;

@@ -1,4 +1,9 @@
 // TODO: Use TypeScript definitions when they get ready
+var objectivec = require('ObjectiveC');
+var foundation = require('Foundation');
+var tnsmethodcalls = require('TNSMethodCalls');
+var tnstestnativecallbacks = require('TNSTestNativeCallbacks');
+
 var __extends = this.__extends || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() {
@@ -40,11 +45,11 @@ var TSObject = (function (_super) {
     Object.defineProperty(TSObject.prototype, "baseProperty", {
         get: function () {
             TNSLog('js getBaseProperty called');
-            return Object.getOwnPropertyDescriptor(TNSBaseInterface.prototype, 'baseProperty').get.call(this);
+            return Object.getOwnPropertyDescriptor(tnsmethodcalls.TNSBaseInterface.prototype, 'baseProperty').get.call(this);
         },
         set: function (x) {
             TNSLog('js setBaseProperty called');
-            Object.getOwnPropertyDescriptor(TNSBaseInterface.prototype, 'baseProperty').set.apply(this, arguments);
+            Object.getOwnPropertyDescriptor(tnsmethodcalls.TNSBaseInterface.prototype, 'baseProperty').set.apply(this, arguments);
         },
         enumerable: true,
         configurable: true
@@ -54,11 +59,11 @@ var TSObject = (function (_super) {
     Object.defineProperty(TSObject.prototype, "derivedProperty", {
         get: function () {
             TNSLog('js getDerivedProperty called');
-            return Object.getOwnPropertyDescriptor(TNSDerivedInterface.prototype, 'derivedProperty').get.call(this);
+            return Object.getOwnPropertyDescriptor(tnsmethodcalls.TNSDerivedInterface.prototype, 'derivedProperty').get.call(this);
         },
         set: function (x) {
             TNSLog('js setDerivedProperty called');
-            Object.getOwnPropertyDescriptor(TNSDerivedInterface.prototype, 'derivedProperty').set.apply(this, arguments);
+            Object.getOwnPropertyDescriptor(tnsmethodcalls.TNSDerivedInterface.prototype, 'derivedProperty').set.apply(this, arguments);
         },
         enumerable: true,
         configurable: true
@@ -81,10 +86,10 @@ var TSObject = (function (_super) {
 
     TSObject.ObjCExposedMethods = {
         'voidSelector': {returns: interop.types.void},
-        'variadicSelector:x:': {returns: NSObject, params: [NSString, interop.types.int32]}
+        'variadicSelector:x:': {returns: objectivec.NSObject, params: [foundation.NSString, interop.types.int32]}
     };
     return TSObject;
-})(TNSDerivedInterface);
+})(tnsmethodcalls.TNSDerivedInterface);
 
 var TSObject1 = (function (_super) {
     __extends(TSObject1, _super);
@@ -126,9 +131,9 @@ var TSObject1 = (function (_super) {
     });
 
 
-    TSObject1.ObjCProtocols = [TNSBaseProtocol2];
+    TSObject1.ObjCProtocols = [tnsmethodcalls.TNSBaseProtocol2];
     return TSObject1;
-})(NSObject);
+})(objectivec.NSObject);
 
 var A = (function () {
     function A() {
@@ -154,7 +159,7 @@ var UnusedConstructor = (function (_super) {
     }
 
     return UnusedConstructor;
-})(NSObject);
+})(objectivec.NSObject);
 
 describe(module.id, function () {
     afterEach(function () {
@@ -166,16 +171,16 @@ describe(module.id, function () {
         expect(object.constructor).toBe(TSObject);
 
         expect(object instanceof TSObject).toBe(true);
-        expect(object instanceof TNSDerivedInterface).toBe(true);
-        expect(object instanceof NSObject).toBe(true);
+        expect(object instanceof tnsmethodcalls.TNSDerivedInterface).toBe(true);
+        expect(object instanceof objectivec.NSObject).toBe(true);
 
         expect(object.class()).toBe(TSObject);
-        expect(object.superclass).toBe(TNSDerivedInterface);
+        expect(object.superclass).toBe(tnsmethodcalls.TNSDerivedInterface);
 
         expect(TSObject.class()).toBe(TSObject);
-        expect(TSObject.superclass()).toBe(TNSDerivedInterface);
+        expect(TSObject.superclass()).toBe(tnsmethodcalls.TNSDerivedInterface);
 
-        expect(NSStringFromClass(TSObject)).toBe('TSObject');
+        expect(foundation.NSStringFromClass(TSObject)).toBe('TSObject');
     });
 
     it('StaticMethods', function () {
@@ -215,8 +220,8 @@ describe(module.id, function () {
     it('ExposedMethods', function () {
         var object = TSObject.alloc().init();
 
-        TNSTestNativeCallbacks.inheritanceVoidSelector(object);
-        expect(TNSTestNativeCallbacks.inheritanceVariadicSelector(object)).toBe('native');
+        tnstestnativecallbacks.TNSTestNativeCallbacks.inheritanceVoidSelector(object);
+        expect(tnstestnativecallbacks.TNSTestNativeCallbacks.inheritanceVariadicSelector(object)).toBe('native');
 
         expect(TNSGetOutput()).toBe('voidSelector called' + 'variadicSelector:native x:9 called');
     });
@@ -230,7 +235,7 @@ describe(module.id, function () {
     it('ImplementMethod', function () {
         var object = TSObject1.alloc().init();
 
-        TNSTestNativeCallbacks.protocolImplementationProtocolInheritance(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationProtocolInheritance(object);
 
         expect(TNSGetOutput()).toBe('baseProtocolMethod1 called' + 'baseProtocolMethod2 called');
     });
@@ -238,7 +243,7 @@ describe(module.id, function () {
     it('ImplementProperties', function () {
         var object = TSObject1.alloc().init();
 
-        TNSTestNativeCallbacks.protocolImplementationProperties(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationProperties(object);
 
         expect(TNSGetOutput()).toBe('setBaseProtocolProperty1: called' + 'baseProtocolProperty1 called' + 'setBaseProtocolProperty1Optional: called' + 'baseProtocolProperty1Optional called');
     });

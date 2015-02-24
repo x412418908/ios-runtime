@@ -1,3 +1,8 @@
+var foundation = require('Foundation');
+var objectivec = require('ObjectiveC');
+var tnsrecords = require('TNSRecords');
+var tnsprimitivepointers = require('TNSPrimitivePointers');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -19,7 +24,7 @@ describe(module.id, function () {
         reference.value = 5;
         expect(reference.value).toBe(5);
 
-        functionWithIntPtr(reference);
+        tnsprimitivepointers.functionWithIntPtr(reference);
         expect(reference.value).toBe(5);
         expect(interop.handleof(reference) instanceof interop.Pointer).toBe(true);
 
@@ -28,7 +33,7 @@ describe(module.id, function () {
         expect(interop.handleof(reference) instanceof interop.Pointer).toBe(true);
 
         var oldHandle = interop.handleof(reference);
-        functionWithIntPtr(reference);
+        tnsprimitivepointers.functionWithIntPtr(reference);
         expect(oldHandle).toBe(interop.handleof(reference));
         expect(reference.value).toBe(10);
 
@@ -36,7 +41,7 @@ describe(module.id, function () {
     });
 
     it("LiveReference", function () {
-        var manager = new TNSPointerManager();
+        var manager = new tnsprimitivepointers.TNSPointerManager();
         expect(manager.data().value).toBe(0);
 
         manager.increment();
@@ -47,32 +52,32 @@ describe(module.id, function () {
     });
 
     it("NullPtr", function () {
-        expect(functionWithNullPointer(null)).toBeNull();
+        expect(tnsprimitivepointers.functionWithNullPointer(null)).toBeNull();
         expect(TNSGetOutput()).toBe('0x0');
     });
 
     it("functionWith_VoidPtr", function () {
-        expect(functionWith_VoidPtr(interop.alloc(4)) instanceof interop.Pointer).toBe(true);
+        expect(tnsprimitivepointers.functionWith_VoidPtr(interop.alloc(4)) instanceof interop.Pointer).toBe(true);
         expect(TNSGetOutput().length).toBeGreaterThan(0);
     });
 
     it("functionWith_BoolPtr", function () {
-        expect(functionWith_BoolPtr(new interop.Reference(true)).value).toBe(true);
+        expect(tnsprimitivepointers.functionWith_BoolPtr(new interop.Reference(true)).value).toBe(true);
         expect(TNSGetOutput()).toBe('1');
     });
 
     it("functionWithUShortPtr", function () {
-        expect(functionWithUShortPtr(new interop.Reference(65535)).value).toBe(65535);
+        expect(tnsprimitivepointers.functionWithUShortPtr(new interop.Reference(65535)).value).toBe(65535);
         expect(TNSGetOutput()).toBe('65535');
     });
 
     it("functionWithUIntPtr", function () {
-        expect(functionWithUIntPtr(new interop.Reference(4294967295)).value).toBe(4294967295);
+        expect(tnsprimitivepointers.functionWithUIntPtr(new interop.Reference(4294967295)).value).toBe(4294967295);
         expect(TNSGetOutput()).toBe('4294967295');
     });
 
     it("functionWithULongPtr", function () {
-        expect(functionWithULongPtr(new interop.Reference(4294967295)).value).toBe(4294967295);
+        expect(tnsprimitivepointers.functionWithULongPtr(new interop.Reference(4294967295)).value).toBe(4294967295);
         expect(TNSGetOutput()).toBe('4294967295');
     });
 
@@ -83,17 +88,17 @@ describe(module.id, function () {
     // });
 
     it("functionWithShortPtr", function () {
-        expect(functionWithShortPtr(new interop.Reference(32767)).value).toBe(32767);
+        expect(tnsprimitivepointers.functionWithShortPtr(new interop.Reference(32767)).value).toBe(32767);
         expect(TNSGetOutput()).toBe('32767');
     });
 
     it("functionWithIntPtr", function () {
-        expect(functionWithIntPtr(new interop.Reference(2147483647)).value).toBe(2147483647);
+        expect(tnsprimitivepointers.functionWithIntPtr(new interop.Reference(2147483647)).value).toBe(2147483647);
         expect(TNSGetOutput()).toBe('2147483647');
     });
 
     it("functionWithLongPtr", function () {
-        expect(functionWithLongPtr(new interop.Reference(2147483647)).value).toBe(2147483647);
+        expect(tnsprimitivepointers.functionWithLongPtr(new interop.Reference(2147483647)).value).toBe(2147483647);
         expect(TNSGetOutput()).toBe('2147483647');
     });
 
@@ -104,27 +109,27 @@ describe(module.id, function () {
     // });
 
     it("functionWithFloatPtr", function () {
-        expect(functionWithFloatPtr(new interop.Reference(3.4028234663852886e+38)).value).toBe(3.4028234663852886e+38);
+        expect(tnsprimitivepointers.functionWithFloatPtr(new interop.Reference(3.4028234663852886e+38)).value).toBe(3.4028234663852886e+38);
         expect(TNSGetOutput()).toBe('340282346638528859811704183484516925440.000000000000000000000000000000000000000000000');
     });
 
     it("functionWithDoublePtr", function () {
-        expect(functionWithDoublePtr(new interop.Reference(1.7976931348623157e+308)).value).toBe(1.7976931348623157e+308);
+        expect(tnsprimitivepointers.functionWithDoublePtr(new interop.Reference(1.7976931348623157e+308)).value).toBe(1.7976931348623157e+308);
         expect(TNSGetOutput()).toBe('179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
     });
 
     it("functionWithStructPtr", function () {
-        var struct = new TNSNestedStruct({a: {x: 1, y: 2}, b: {x: 3, y: 4}});
-        expect(TNSNestedStruct.equals(functionWithStructPtr(new interop.Reference(struct)).value, struct)).toBe(true);
+        var struct = new tnsrecords.TNSNestedStruct({a: {x: 1, y: 2}, b: {x: 3, y: 4}});
+        expect(tnsrecords.TNSNestedStruct.equals(tnsprimitivepointers.functionWithStructPtr(new interop.Reference(struct)).value, struct)).toBe(true);
         expect(TNSGetOutput()).toBe('1 2 3 4');
     });
 
     it("CString1", function () {
-        expect(NSString.stringWithUTF8String(functionWithCharPtr('test')).toString()).toBe('test');
+        expect(foundation.NSString.stringWithUTF8String(tnsprimitivepointers.functionWithCharPtr('test')).toString()).toBe('test');
     });
 
     it("CString2", function () {
-        expect(NSString.stringWithUTF8String(functionWithUCharPtr('test')).toString()).toBe('test');
+        expect(foundation.NSString.stringWithUTF8String(tnsprimitivepointers.functionWithUCharPtr('test')).toString()).toBe('test');
     });
 
     // TODO: Create array type and constructor
@@ -138,7 +143,7 @@ describe(module.id, function () {
         reference[2] = 3;
         reference[3] = 0;
 
-        functionWithIntIncompleteArray(reference);
+        tnsprimitivepointers.functionWithIntIncompleteArray(reference);
         expect(TNSGetOutput()).toBe('123');
     });
 
@@ -151,7 +156,7 @@ describe(module.id, function () {
         reference[3] = 4;
         reference[4] = 5;
 
-        functionWithIntConstantArray(reference);
+        tnsprimitivepointers.functionWithIntConstantArray(reference);
         expect(TNSGetOutput()).toBe('12345');
     });
 
@@ -163,32 +168,32 @@ describe(module.id, function () {
         reference[2] = 3;
         reference[3] = 4;
 
-        functionWithIntConstantArray2(reference);
+        tnsprimitivepointers.functionWithIntConstantArray2(reference);
         expect(TNSGetOutput()).toBe('1234');
     });
 
     it("NSArrayWithObjects", function () {
         var handle = interop.alloc(4 * interop.sizeof(interop.types.id));
         var reference = new interop.Reference(interop.types.id, handle);
-        reference[0] = new NSObject();
-        reference[1] = new NSObject();
-        reference[2] = new NSObject();
-        reference[3] = new NSObject();
+        reference[0] = new objectivec.NSObject();
+        reference[1] = new objectivec.NSObject();
+        reference[2] = new objectivec.NSObject();
+        reference[3] = new objectivec.NSObject();
 
-        var array = NSArray.arrayWithObjectsCount(reference, 4);
-        expect(array[0].class()).toBe(NSObject);
-        expect(array[1].class()).toBe(NSObject);
-        expect(array[2].class()).toBe(NSObject);
-        expect(array[3].class()).toBe(NSObject);
+        var array = foundation.NSArray.arrayWithObjectsCount(reference, 4);
+        expect(array[0].class()).toBe(objectivec.NSObject);
+        expect(array[1].class()).toBe(objectivec.NSObject);
+        expect(array[2].class()).toBe(objectivec.NSObject);
+        expect(array[3].class()).toBe(objectivec.NSObject);
     });
 
     it("SmallArrayBuffer", function () {
         var view = new Int32Array([1, 2, 3, 4, 5, 0]);
-        functionWithIntIncompleteArray(view);
+        tnsprimitivepointers.functionWithIntIncompleteArray(view);
         expect(TNSGetOutput()).toBe('12345');
         TNSClearOutput();
 
-        functionWithIntIncompleteArray(view.buffer);
+        tnsprimitivepointers.functionWithIntIncompleteArray(view.buffer);
         expect(TNSGetOutput()).toBe('12345');
         TNSClearOutput();
     });
@@ -205,18 +210,18 @@ describe(module.id, function () {
         array.push(0);
         var view = new Int32Array(array);
 
-        functionWithIntIncompleteArray(view);
+        tnsprimitivepointers.functionWithIntIncompleteArray(view);
         expect(TNSGetOutput()).toBe(expected);
         TNSClearOutput();
 
-        functionWithIntIncompleteArray(view.buffer);
+        tnsprimitivepointers.functionWithIntIncompleteArray(view.buffer);
         expect(TNSGetOutput()).toBe(expected);
         TNSClearOutput();
     });
 
     it("CastPointerToNSObject", function () {
-        var x = NSObject.alloc().init();
-        var y = NSObject(interop.handleof(x));
+        var x = objectivec.NSObject.alloc().init();
+        var y = objectivec.NSObject(interop.handleof(x));
         expect(x).toBe(y);
         expect(x.toString()).toBe(y.toString());
         expect(interop.handleof(x)).toBe(interop.handleof(y));

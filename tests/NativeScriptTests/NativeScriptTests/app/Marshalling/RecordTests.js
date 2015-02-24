@@ -1,53 +1,57 @@
+var foundation = require('Foundation');
+var tnsrecords = require('TNSRecords');
+var tnstestnativecallbacks = require('TNSTestNativeCallbacks');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it("SimpleRecord", function () {
-        var record = new TNSSimpleStruct();
-        expect(record instanceof TNSSimpleStruct).toBe(true);
+        var record = new tnsrecords.TNSSimpleStruct();
+        expect(record instanceof tnsrecords.TNSSimpleStruct).toBe(true);
 
         expect(record.x).toBe(0);
         expect(record.y).toBe(0);
     });
 
     it("SimpleRecordEqualsFastPath", function () {
-        var record1 = new TNSSimpleStruct();
-        var record2 = new TNSSimpleStruct();
-        expect(TNSSimpleStruct.equals(record1, record2)).toBe(true);
+        var record1 = new tnsrecords.TNSSimpleStruct();
+        var record2 = new tnsrecords.TNSSimpleStruct();
+        expect(tnsrecords.TNSSimpleStruct.equals(record1, record2)).toBe(true);
     });
 
     it("SimpleRecordEqualsSlowPath", function () {
         var record1 = {x: 1, y: 2};
         var record2 = {x: 1, y: 2};
-        expect(TNSSimpleStruct.equals(record1, record2)).toBe(true);
+        expect(tnsrecords.TNSSimpleStruct.equals(record1, record2)).toBe(true);
     });
 
     it("NestedRecordEqualsSlowPath1", function () {
-        var record1 = new TNSNestedStruct();
+        var record1 = new tnsrecords.TNSNestedStruct();
         var record2 = {a: {x: 0, y: 0}, b: {x: 0, y: 0}};
-        expect(TNSNestedStruct.equals(record1, record2)).toBe(true);
+        expect(tnsrecords.TNSNestedStruct.equals(record1, record2)).toBe(true);
     });
 
     it("NestedRecordEqualsSlowPath2", function () {
         var record1 = {a: {x: 0, y: 0}, b: {x: 0, y: 0}};
         var record2 = {a: {x: 0, y: 0}, b: {x: 0, y: 0}};
-        expect(TNSNestedStruct.equals(record1, record2)).toBe(true);
+        expect(tnsrecords.TNSNestedStruct.equals(record1, record2)).toBe(true);
     });
 
     it("RecordConstructorLiteral", function () {
-        var record = new TNSNestedStruct({a: {x: 1, y: 2}, b: {x: 3, y: 4}});
-        TNSTestNativeCallbacks.recordsNestedStruct(record);
+        var record = new tnsrecords.TNSNestedStruct({a: {x: 1, y: 2}, b: {x: 3, y: 4}});
+        tnstestnativecallbacks.TNSTestNativeCallbacks.recordsNestedStruct(record);
         expect(TNSGetOutput()).toBe('1 2 3 4');
     });
 
     it("RecordConstructorPointer", function () {
         (function () {
-            var size = interop.sizeof(TNSNestedStruct);
+            var size = interop.sizeof(tnsrecords.TNSNestedStruct);
             expect(size).toBeGreaterThan(0);
             var buffer = interop.alloc(size);
-            var record = new TNSNestedStruct(buffer);
-            TNSTestNativeCallbacks.recordsNestedStruct(record);
+            var record = new tnsrecords.TNSNestedStruct(buffer);
+            tnstestnativecallbacks.TNSTestNativeCallbacks.recordsNestedStruct(record);
             expect(TNSGetOutput()).toBe('0 0 0 0');
         }());
         __collect();
@@ -55,11 +59,11 @@ describe(module.id, function () {
 
     it("RecordFunctionPointer", function () {
         (function () {
-            var size = interop.sizeof(TNSNestedStruct);
+            var size = interop.sizeof(tnsrecords.TNSNestedStruct);
             expect(size).toBeGreaterThan(0);
             var buffer = interop.alloc(size);
-            var record = TNSNestedStruct(buffer);
-            TNSTestNativeCallbacks.recordsNestedStruct(record);
+            var record = tnsrecords.TNSNestedStruct(buffer);
+            tnstestnativecallbacks.TNSTestNativeCallbacks.recordsNestedStruct(record);
             expect(TNSGetOutput()).toBe('0 0 0 0');
             expect(interop.handleof(record)).toBe(buffer);
         }());
@@ -67,17 +71,17 @@ describe(module.id, function () {
     });
 
     it("RecordStrings", function () {
-        var record = new TNSNestedStruct();
+        var record = new tnsrecords.TNSNestedStruct();
         expect(JSON.stringify(record)).toBe('{"a":{"x":0,"y":0},"b":{"x":0,"y":0}}');
         expect(record.toString()).toMatch(/^<struct TNSNestedStruct: 0x\w+>$/)
     });
 
     it("SimpleStructWraper", function () {
-        var record = new TNSSimpleStruct();
+        var record = new tnsrecords.TNSSimpleStruct();
         record.x = 7;
         record.y = 8;
 
-        var result = TNSTestNativeCallbacks.recordsSimpleStruct(record);
+        var result = tnstestnativecallbacks.TNSTestNativeCallbacks.recordsSimpleStruct(record);
         expect(TNSGetOutput()).toBe('7 8');
 
         expect(result.x).toBe(record.x);
@@ -90,7 +94,7 @@ describe(module.id, function () {
             y: 8
         };
 
-        var result = TNSTestNativeCallbacks.recordsSimpleStruct(object);
+        var result = tnstestnativecallbacks.TNSTestNativeCallbacks.recordsSimpleStruct(object);
         expect(TNSGetOutput()).toBe('7 8');
 
         expect(result.x).toBe(object.x);
@@ -104,7 +108,7 @@ describe(module.id, function () {
     //         arr: [2, 3, 4, 5],
     //     };
 
-    //     var result = TNSTestNativeCallbacks.recordsStructWithArray(object);
+    //     var result = tnstestnativecallbacks.TNSTestNativeCallbacks.recordsStructWithArray(object);
     //     expect(TNSGetOutput()).toBe('1 2 3 4 5');
 
     //     expect(result).toEqual(object);
@@ -121,7 +125,7 @@ describe(module.id, function () {
             }
         };
 
-        var result = TNSTestNativeCallbacks.recordsNestedAnonymousStruct(object);
+        var result = tnstestnativecallbacks.TNSTestNativeCallbacks.recordsNestedAnonymousStruct(object);
         expect(TNSGetOutput()).toBe('1 2 3');
 
         expect(result.x1).toBe(object.x1);
@@ -130,15 +134,15 @@ describe(module.id, function () {
     });
 
     it("NSRangeMake", function () {
-        expect(NSRange.equals(NSMakeRange(1, 2), {
+        expect(foundation.NSRange.equals(NSMakeRange(1, 2), {
             location: 1,
             length: 2
         })).toBe(true);
     });
 
     it("LinkedList", function () {
-        var record = new TNSStructWithPointers();
-        record.z = new TNSStructWithPointers();
+        var record = new tnsrecords.TNSStructWithPointers();
+        record.z = new tnsrecords.TNSStructWithPointers();
         expect(record.z.value.z).toBe(null);
     });
 
@@ -159,7 +163,7 @@ describe(module.id, function () {
     //         }],
     //     };
 
-    //     var result = TNSTestNativeCallbacks.recordsComplexStruct(object);
+    //     var result = tnstestnativecallbacks.TNSTestNativeCallbacks.recordsComplexStruct(object);
     //     expect(TNSGetOutput()).toBe('1 2 3 4 5 6 7');
     //     expect(result).toEqual(object);
     // });

@@ -1,3 +1,8 @@
+var mediaplayer = require('MediaPlayer');
+var mapkit = require('MapKit');
+var storekit = require('StoreKit');
+var spritekit = require('SpriteKit');
+
 describe(module.id, function() {
     afterEach(function () {
         TNSClearOutput();
@@ -5,23 +10,23 @@ describe(module.id, function() {
 
     it("InterfaceDiff", function() {
         if (SYSTEM_VERSION_LESS_THAN("7.1")) {
-            expect(global.MPContentItem).toBeUndefined();
+            expect(mediaplayer.MPContentItem).toBeUndefined();
         } else {
-            var object = new MPContentItem();
+            var object = new mediaplayer.MPContentItem();
             expect(object).not.toBeUndefined();
         }
     });
 
     it("ConstantDiff", function() {
         if (SYSTEM_VERSION_LESS_THAN("7.1")) {
-            expect(global.MKLaunchOptionsCameraKey).toBeUndefined();
+            expect(mapkit.MKLaunchOptionsCameraKey).toBeUndefined();
         } else {
-            expect(global.MKLaunchOptionsCameraKey).not.toBeUndefined();
+            expect(mapkit.MKLaunchOptionsCameraKey).not.toBeUndefined();
         }
     });
 
     it("PropertyDiff", function() {
-        var object = SKView.alloc().init();
+        var object = spritekit.SKView.alloc().init();
         if (SYSTEM_VERSION_LESS_THAN("8.0")) {
             expect(object.allowsTransparency).toBeUndefined();
         } else {
@@ -31,9 +36,9 @@ describe(module.id, function() {
 
     it("FunctionDiff", function() {
         if (SYSTEM_VERSION_LESS_THAN("7.1")) {
-            expect(global.SKTerminateForInvalidReceipt).toBeUndefined();
+            expect(storekit.SKTerminateForInvalidReceipt).toBeUndefined();
         } else {
-            expect(global.SKTerminateForInvalidReceipt).not.toBeUndefined();
+            expect(storekit.SKTerminateForInvalidReceipt).not.toBeUndefined();
         }
     });
 });

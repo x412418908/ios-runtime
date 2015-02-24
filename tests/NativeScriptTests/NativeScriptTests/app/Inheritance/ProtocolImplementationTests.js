@@ -1,15 +1,19 @@
+var objectivec = require('ObjectiveC');
+var tnstestnativecallbacks = require('TNSTestNativeCallbacks');
+var tnsmethodcalls = require('TNSMethodCalls');
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
     });
 
     it('Methods', function () {
-        var object = NSObject.extend({
+        var object = objectivec.NSObject.extend({
             baseProtocolMethod1: function () {
                 TNSLog('baseProtocolMethod1 called');
             }
         }, {
-            protocols: [TNSBaseProtocol1]
+            protocols: [tnsmethodcalls.TNSBaseProtocol1]
         }).alloc().init();
 
         var actual;
@@ -21,7 +25,7 @@ describe(module.id, function () {
         expect(actual).toBe(expected);
         TNSClearOutput();
 
-        TNSTestNativeCallbacks.protocolImplementationMethods(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationMethods(object);
 
         actual = TNSGetOutput();
         expect(actual).toBe(expected);
@@ -29,7 +33,7 @@ describe(module.id, function () {
     });
 
     it('Properties', function () {
-        var object = NSObject.extend({
+        var object = objectivec.NSObject.extend({
             get baseProtocolProperty1() {
                 TNSLog('baseProtocolProperty1 called');
             },
@@ -44,7 +48,7 @@ describe(module.id, function () {
                 TNSLog('setBaseProtocolProperty1Optional: called');
             },
         }, {
-            protocols: [TNSBaseProtocol1]
+            protocols: [tnsmethodcalls.TNSBaseProtocol1]
         }).alloc().init();
 
         var actual;
@@ -63,7 +67,7 @@ describe(module.id, function () {
         expect(actual).toBe(expected);
         TNSClearOutput();
 
-        TNSTestNativeCallbacks.protocolImplementationProperties(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationProperties(object);
 
         actual = TNSGetOutput();
         expect(actual).toBe(expected);
@@ -71,7 +75,7 @@ describe(module.id, function () {
     });
 
     it("ProtocolInheritance", function () {
-        var object = NSObject.extend({
+        var object = objectivec.NSObject.extend({
             baseProtocolMethod1: function () {
                 TNSLog('baseProtocolMethod1 called');
             },
@@ -79,7 +83,7 @@ describe(module.id, function () {
                 TNSLog('baseProtocolMethod2 called');
             },
         }, {
-            protocols: [TNSBaseProtocol2]
+            protocols: [tnsmethodcalls.TNSBaseProtocol2]
         }).alloc().init();
 
         var actual;
@@ -94,7 +98,7 @@ describe(module.id, function () {
         expect(actual).toBe(expected);
         TNSClearOutput();
 
-        TNSTestNativeCallbacks.protocolImplementationProtocolInheritance(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationProtocolInheritance(object);
 
         actual = TNSGetOutput();
         expect(actual).toBe(expected);
@@ -102,12 +106,12 @@ describe(module.id, function () {
     });
 
     it('OptionalMethods', function () {
-        var object = NSObject.extend({
+        var object = objectivec.NSObject.extend({
             baseProtocolMethod1Optional: function () {
                 TNSLog('baseProtocolMethod1Optional called');
             },
         }, {
-            protocols: [TNSBaseProtocol2]
+            protocols: [tnsmethodcalls.TNSBaseProtocol2]
         }).alloc().init();
 
         var actual;
@@ -119,7 +123,7 @@ describe(module.id, function () {
         expect(actual).toBe(expected);
         TNSClearOutput();
 
-        TNSTestNativeCallbacks.protocolImplementationOptionalMethods(object);
+        tnstestnativecallbacks.TNSTestNativeCallbacks.protocolImplementationOptionalMethods(object);
 
         actual = TNSGetOutput();
         expect(actual).toBe(expected);
@@ -127,8 +131,8 @@ describe(module.id, function () {
     });
 
     it('AlreadyImplementedProtocol', function () {
-        TNSDerivedInterface.extend({}, {
-            protocols: [TNSBaseProtocol1]
+        tnsmethodcalls.TNSDerivedInterface.extend({}, {
+            protocols: [tnsmethodcalls.TNSBaseProtocol1]
         });
     });
 });

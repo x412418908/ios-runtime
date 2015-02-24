@@ -1,3 +1,9 @@
+var foundation = require('Foundation');
+var objectivec = require('ObjectiveC');
+
+var NSString = foundation.NSString;
+var NSMutableString = foundation.NSMutableString;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -90,12 +96,12 @@ describe(module.id, function () {
     });
 
     it("NSMutableAttributedString", function () {
-        var str = NSMutableAttributedString.alloc().initWithString('hello');
+        var str = foundation.NSMutableAttributedString.alloc().initWithString('hello');
         expect(str.string).toBe('hello');
     });
 
     it("NSMutableStringMarshalling", function () {
-        var JSObject = NSObject.extend({
+        var JSObject = objectivec.NSObject.extend({
             'x': function () {
                 return this._x;
             }, 'setX:': function (x) {

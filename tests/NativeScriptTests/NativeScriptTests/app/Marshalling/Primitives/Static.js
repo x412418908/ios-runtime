@@ -1,3 +1,8 @@
+var primitives = require('TNSPrimitives');
+var objectivec = require('ObjectiveC');
+
+var TNSPrimitives = primitives.TNSPrimitives;
+
 describe(module.id, function () {
     afterEach(function () {
         TNSClearOutput();
@@ -166,8 +171,8 @@ describe(module.id, function () {
     });
 
     it("StaticMethodWithClass", function () {
-        var result = TNSPrimitives.methodWithClass(NSObject);
-        expect(result).toBe(NSObject);
+        var result = TNSPrimitives.methodWithClass(objectivec.NSObject);
+        expect(result).toBe(objectivec.NSObject);
 
         var actual = TNSGetOutput();
         expect(actual).toBe("NSObject");
