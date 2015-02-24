@@ -171,11 +171,6 @@ bool GlobalObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
 }
 
 void GlobalObject::getOwnPropertyNames(JSObject* object, ExecState* execState, PropertyNameArray& propertyNames, EnumerationMode enumerationMode) {
-    MetaFileReader* metadata = getMetadata();
-    for (MetaIterator it = metadata->begin(); it != metadata->end(); ++it) {
-        propertyNames.add(Identifier(execState, (*it)->jsName()));
-    }
-
     Base::getOwnPropertyNames(object, execState, propertyNames, enumerationMode);
 }
 
