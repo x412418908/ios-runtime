@@ -9,6 +9,7 @@
 #import "TNSTestCommon.h"
 
 #import <JavaScriptCore/JavaScript.h>
+#import <JavaScriptCore/JSStringRefCF.h>
 #import <NativeScript/NativeScript.h>
 #import "Utilities.h"
 
@@ -64,6 +65,14 @@ void TNSRunScript(NSString *script) {
         JSEvaluateScript(runtime.globalContext, scriptRef, NULL, NULL, 0, &error);
         JSStringRelease(scriptRef);
         hasError = !!error;
+
+        if (error) {
+            JSStringRef errorJsStr = JSValueToStringCopy(runtime.globalContext, error, NULL);
+            CFStringRef errorStr = JSStringCopyCFString(kCFAllocatorDefault, errorJsStr);
+            NSLog(@"%@", errorStr);
+            CFRelease(errorStr);
+            JSStringRelease(errorJsStr);
+        }
     });
 
     assert(!hasError);
