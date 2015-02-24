@@ -1,3 +1,5 @@
+var uikit = require('UIKit');
+
 console.log('Hello, World!');
 
-UIApplicationMain(0, null, null, null);
+uikit.UIApplicationMain(0, null, null, null);
