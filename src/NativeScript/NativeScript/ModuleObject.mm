@@ -49,9 +49,10 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
 //        return true;
 //    }
 
+    const char* moduleName = moduleObject->_name.utf8().data();
     StringImpl* symbolName = propertyName.publicName();
     const Meta* symbolMeta = getMetadata()->findMeta(symbolName);
-    if (!symbolMeta)
+    if (!symbolMeta ||  (strcmp(moduleName, symbolMeta->framework().data()) != 0))
         return false;
 
     JSValue symbolWrapper;
