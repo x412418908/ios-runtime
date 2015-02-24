@@ -8,9 +8,9 @@
 #define __ModuleObject_H_
 
 namespace NativeScript {
-class ModuleObject : public JSC::JSObject {
+class ModuleObject : public JSC::JSNonFinalObject {
 public:
-    typedef JSC::JSObject Base;
+    typedef JSC::JSNonFinalObject Base;
 
     static const unsigned StructureFlags;
 

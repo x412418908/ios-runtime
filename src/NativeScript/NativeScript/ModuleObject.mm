@@ -124,7 +124,7 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
     }
 
     if (symbolWrapper) {
-        object->putDirectWithoutTransition(vm, propertyName, symbolWrapper);
+        object->putDirect(vm, propertyName, symbolWrapper);
         propertySlot.setValue(object, None, symbolWrapper);
         return true;
     }
