@@ -1,8 +1,9 @@
+var uikit = require('UIKit');
 require('./CanvasViewController');
 require('./DetailViewController');
 require('./MasterViewController');
 
-var TNSAppDelegate = UIResponder.extend({
+var TNSAppDelegate = uikit.UIResponder.extend({
 	get window() {
 		return this._window;
 	},
@@ -10,7 +11,7 @@ var TNSAppDelegate = UIResponder.extend({
 		this._window = aWindow;
 	}
 }, {
-	protocols: [UIApplicationDelegate]
+	protocols: [uikit.UIApplicationDelegate]
 });
 
-UIApplicationMain(0, null, null, TNSAppDelegate.name);
+uikit.UIApplicationMain(0, null, null, TNSAppDelegate.name);

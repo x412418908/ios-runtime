@@ -1,6 +1,7 @@
+var uikit = require('UIKit');
 var utils = require('./Utils');
 
-var JSDetailViewController = UIViewController.extend({
+var JSDetailViewController = uikit.UIViewController.extend({
   viewWillAppear: function(animated) {
     var navigationItem = this.navigationItem;
     navigationItem.title = this.item["title"];
@@ -18,7 +19,7 @@ var JSDetailViewController = UIViewController.extend({
       self.toggleTopBarVisibility();
     });
 
-    UIViewController.prototype.viewWillAppear.call(this, animated);
+    uikit.UIViewController.prototype.viewWillAppear.call(this, animated);
   },
 
   prefersStatusBarHidden: function() {
@@ -57,10 +58,10 @@ var JSDetailViewController = UIViewController.extend({
   name: "JSDetailViewController",
   exposedMethods: {
     "toggleTopBarVisibility": { returns: interop.types.void },
-    "imageView": { returns: UIImageView },
-    "setImageView:": { returns: interop.types.void, params: [ UIImageView ] },
-    "activityIndicator": { returns: UIActivityIndicatorView },
-    "setActivityIndicator:": { returns: interop.types.void, params: [ UIActivityIndicatorView ] }
+    "imageView": { returns: uikit.UIImageView },
+    "setImageView:": { returns: interop.types.void, params: [ uikit.UIImageView ] },
+    "activityIndicator": { returns: uikit.UIActivityIndicatorView },
+    "setActivityIndicator:": { returns: interop.types.void, params: [ uikit.UIActivityIndicatorView ] }
   },
-  protocols: [ UIScrollViewDelegate ]
+  protocols: [ uikit.UIScrollViewDelegate ]
 });

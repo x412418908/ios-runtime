@@ -1,25 +1,27 @@
+var uikit = require('UIKit');
+var foundation = require('Foundation');
 var utils = require('./Utils');
 
-var dateFormatter = new NSDateFormatter();
-dateFormatter.locale = NSLocale.currentLocale();
+var dateFormatter = new foundation.NSDateFormatter();
+dateFormatter.locale = foundation.NSLocale.currentLocale();
 //dateFormatter.dateStyle = NSDateFormatterStyle.NSDateFormatterShortStyle;
 //dateFormatter.timeStyle = NSDateFormatterStyle.NSDateFormatterShortStyle;
 dateFormatter.doesRelativeDateFormatting = true;
 
-var JSMasterViewController = UITableViewController.extend({
+var JSMasterViewController = uikit.UITableViewController.extend({
     viewDidLoad: function() {
-        UITableViewController.prototype.viewDidLoad.call(this);
+        uikit.UITableViewController.prototype.viewDidLoad.call(this);
 
         this.items = [];
 
-        this.refreshControl = new UIRefreshControl();
-        this.refreshControl.addTargetActionForControlEvents(this, "loadData", UIControlEvents.UIControlEventValueChanged);
+        this.refreshControl = new uikit.UIRefreshControl();
+        this.refreshControl.addTargetActionForControlEvents(this, "loadData", uikit.UIControlEvents.UIControlEventValueChanged);
         this.refreshControl.beginRefreshing();
 
         this.loadData();
     },
     "aboutPressed:": function(sender) {
-        var alertWindow = new UIAlertView();
+        var alertWindow = new uikit.UIAlertView();
         alertWindow.title = "About";
         alertWindow.message = "2014 Just Decompile Team";
         alertWindow.addButtonWithTitle("OK");
@@ -48,7 +50,7 @@ var JSMasterViewController = UITableViewController.extend({
         var textLabel = cell.contentView.viewWithTag(1);
         textLabel.text = item["title"];
 
-        var created = NSDate.dateWithTimeIntervalSince1970(item["created_utc"]);
+        var created = foundation.NSDate.dateWithTimeIntervalSince1970(item["created_utc"]);
         var detailTextLabel = cell.contentView.viewWithTag(2);
         detailTextLabel.text = dateFormatter.stringFromDate(created);
 
@@ -63,11 +65,11 @@ var JSMasterViewController = UITableViewController.extend({
     loadData: function() {
         var urlSession = utils.getURLSession();
         var self = this;
-        var dataTask = urlSession.dataTaskWithURLCompletionHandler(NSURL.URLWithString("http://www.reddit.com/r/aww.json?limit=500"), (function(data, response, error) {
+        var dataTask = urlSession.dataTaskWithURLCompletionHandler(foundation.NSURL.URLWithString("http://www.reddit.com/r/aww.json?limit=500"), (function(data, response, error) {
             if (error) {
                 console.error(error.localizedDescription);
             } else {
-				var jsonString = NSString.alloc().initWithDataEncoding(data, NSUTF8StringEncoding).toString();
+				var jsonString = foundation.NSString.alloc().initWithDataEncoding(data, foundation.NSUTF8StringEncoding).toString();
                 var json = JSON.parse(jsonString);
                 self.items = json.data.children.map(function(child) {
                     return child["data"];
@@ -85,6 +87,6 @@ var JSMasterViewController = UITableViewController.extend({
     name: "JSMasterViewController",
     exposedMethods: {
         "loadData": { returns: interop.types.void },
-        "aboutPressed:": { returns: interop.types.void, params: [ UIControl ] }
+        "aboutPressed:": { returns: interop.types.void, params: [ uikit.UIControl ] }
     }
 });
