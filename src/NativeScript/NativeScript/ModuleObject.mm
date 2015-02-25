@@ -28,6 +28,9 @@ const ClassInfo ModuleObject::s_info = { "ModuleObject", &Base::s_info, 0, 0, CR
 void ModuleObject::finishCreation(VM &vm, const WTF::String &name) {
     Base::finishCreation(vm);
     this->_name = name;
+
+    WTF::CString nameStr = name.utf8();
+    SymbolLoader::instance().ensureFramework(nameStr.data());
 }
 
 WTF::String ModuleObject::className(const JSObject *object) {
@@ -60,7 +63,6 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
         case Interface: {
             Class klass = objc_getClass(symbolMeta->name());
             if (!klass) {
-                SymbolLoader::instance().ensureFramework(symbolMeta->moduleName());
                 klass = objc_getClass(symbolMeta->name());
             }
 
@@ -73,7 +75,6 @@ bool ModuleObject::getOwnPropertySlot(JSObject* object, ExecState* execState, Pr
         case ProtocolType: {
             Protocol* aProtocol = objc_getProtocol(symbolMeta->name());
             if (!aProtocol) {
-                SymbolLoader::instance().ensureFramework(symbolMeta->moduleName());
                 aProtocol = objc_getProtocol(symbolMeta->name());
             }
 
