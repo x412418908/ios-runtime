@@ -59,9 +59,9 @@ var JSMasterViewController = uikit.UITableViewController.extend({
         utils.imageViewLoadFromURL(imageView, item["thumbnail"]);
         return cell;
     },
-	tableViewHeightForRowAtIndexPath: function(tableView, indexPath) {
-		return 44;
-	},
+    tableViewHeightForRowAtIndexPath: function(tableView, indexPath) {
+        return 44;
+    },
     loadData: function() {
         var urlSession = utils.getURLSession();
         var self = this;
@@ -69,12 +69,12 @@ var JSMasterViewController = uikit.UITableViewController.extend({
             if (error) {
                 console.error(error.localizedDescription);
             } else {
-				var jsonString = foundation.NSString.alloc().initWithDataEncoding(data, foundation.NSUTF8StringEncoding).toString();
+                var jsonString = foundation.NSString.alloc().initWithDataEncoding(data, foundation.NSUTF8StringEncoding).toString();
                 var json = JSON.parse(jsonString);
                 self.items = json.data.children.map(function(child) {
                     return child["data"];
                 });
-				
+
                 self.tableView.reloadData();
             }
             __collect();
