@@ -18,6 +18,8 @@ using namespace JSC;
 
 void reportFatalErrorBeforeShutdown(ExecState* execState, JSValue error) {
     TNSRuntime* runtime = static_cast<TNSRuntime*>(WTF::wtfThreadData().m_apiData);
+
+    WTFReportBacktrace();
     static_cast<GlobalObject*>(execState->lexicalGlobalObject())->inspectorController().reportAPIException(execState, error);
 
     if (runtime->_globalObject->debugger()) {
@@ -26,7 +28,7 @@ void reportFatalErrorBeforeShutdown(ExecState* execState, JSValue error) {
             CFRunLoopRunInMode(CFSTR("com.apple.JavaScriptCore.remote-inspector-runloop-mode"), 0.1, false);
         }
     } else {
-        WTFCrash();
+        reinterpret_cast<void (*)()>(0xDEADDEAD)();
     }
 }
 }
